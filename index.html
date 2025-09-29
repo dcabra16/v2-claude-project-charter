@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Professional Portfolio Website - Project Charter</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --ink: #1e293b;
+      --muted: #64748b;
+      --brand-1: #0f766e;
+      --brand-2: #14b8a6;
+      --accent: #06b6d4;
+      --ring: rgba(20,184,166,.2);
+      --shadow-sm: 0 1px 3px rgba(15,23,42,.08);
+      --shadow: 0 4px 12px rgba(15,23,42,.1);
+      --shadow-lg: 0 20px 40px rgba(15,23,42,.12);
+      --radius: 12px;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --ink: #f1f5f9;
+      --muted: #94a3b8;
+      --brand-1: #5eead4;
+      --brand-2: #2dd4bf;
+      --accent: #22d3ee;
+      --ring: rgba(94,234,212,.3);
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.3);
+      --shadow: 0 4px 12px rgba(0,0,0,.4);
+      --shadow-lg: 0 20px 40px rgba(0,0,0,.5);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.7;
+      color: var(--ink);
+      background: linear-gradient(135deg, #f0fdfa 0%, var(--bg) 100%);
+      min-height: 100vh;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    [data-theme="dark"] body {
+      background: linear-gradient(135deg, #0a1628 0%, var(--bg) 100%);
+    }
+
+    a { color: var(--brand-1); text-decoration: none; transition: all .2s ease; }
+    a:hover { color: var(--brand-2); }
+
+    .header {
+      background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
+      color: white;
+      padding: 3rem 2rem;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    [data-theme="dark"] .header {
+      background: linear-gradient(135deg, #134e4a 0%, #0f766e 100%);
+    }
+    
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      opacity: .4;
+    }
+
+    .header h1 {
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      font-weight: 700;
+      margin-bottom: .5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header p {
+      font-size: 1.1rem;
+      opacity: .95;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header-badge {
+      display: inline-block;
+      background: rgba(255,255,255,.2);
+      backdrop-filter: blur(10px);
+      padding: .5rem 1rem;
+      border-radius: 50px;
+      font-size: .875rem;
+      margin-bottom: 1rem;
+      border: 1px solid rgba(255,255,255,.3);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 2rem;
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(15,23,42,.08);
+      transition: background 0.3s ease, border 0.3s ease;
+    }
+
+    [data-theme="dark"] .sidebar {
+      border: 1px solid rgba(255,255,255,.1);
+    }
+
+    .sidebar h3 {
+      font-size: .875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .625rem;
+      background: var(--card);
+      border: 1px solid rgba(15,23,42,.08);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: .875rem;
+      font-weight: 500;
+      transition: all .2s ease;
+      margin-bottom: 1rem;
+      justify-content: center;
+      width: 100%;
+    }
+
+    [data-theme="dark"] .theme-toggle {
+      border: 1px solid rgba(255,255,255,.1);
+    }
+
+    .theme-toggle:hover {
+      background: var(--bg);
+      border-color: var(--brand-2);
+    }
+
+    .theme-icon {
+      width: 18px;
+      height: 18px;
+      transition: transform .3s ease;
+    }
+
+    .theme-toggle:hover .theme-icon {
+      transform: rotate(180deg);
+    }
+
+    .text-size-control {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      margin-bottom: 1rem;
+      padding: .75rem;
+      background: var(--bg);
+      border-radius: 8px;
+      border: 1px solid rgba(15,23,42,.08);
+    }
+
+    [data-theme="dark"] .text-size-control {
+      border: 1px solid rgba(255,255,255,.1);
+    }
+
+    .text-size-label {
+      font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--muted);
+      font-weight: 600;
+      margin-right: auto;
+    }
+
+    .text-size-btn {
+      padding: .375rem .625rem;
+      background: var(--card);
+      border: 1px solid rgba(15,23,42,.1);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: .75rem;
+      font-weight: 600;
+      color: var(--ink);
+      transition: all .2s ease;
+      min-width: 32px;
+      text-align: center;
+    }
+
+    [data-theme="dark"] .text-size-btn {
+      border: 1px solid rgba(255,255,255,.1);
+    }
+
+    .text-size-btn:hover {
+      background: var(--brand-1);
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    .text-size-btn.active {
+      background: var(--brand-1);
+      color: white;
+      border-color: var(--brand-1);
+    }
+
+    body.text-small {
+      font-size: 14px;
+    }
+
+    body.text-small .header h1 {
+      font-size: clamp(1.5rem, 4vw, 2rem);
+    }
+
+    body.text-small .header p {
+      font-size: .95rem;
+    }
+
+    body.text-small .section-title {
+      font-size: 1.1rem;
+    }
+
+    body.text-small .content-card h3 {
+      font-size: 1.1rem;
+    }
+
+    body.text-small .content-card h4 {
+      font-size: 1rem;
+    }
+
+    body.text-medium {
+      font-size: 16px;
+    }
+
+    body.text-large {
+      font-size: 18px;
+    }
+
+    body.text-large .header h1 {
+      font-size: clamp(2rem, 4vw, 3rem);
+    }
+
+    body.text-large .header p {
+      font-size: 1.25rem;
+    }
+
+    body.text-large .section-title {
+      font-size: 1.4rem;
+    }
+
+    body.text-large .content-card h3 {
+      font-size: 1.4rem;
+    }
+
+    body.text-large .content-card h4 {
+      font-size: 1.25rem;
+    }
+
+    body.text-large .info-value {
+      font-size: 1.1rem;
+    }
+
+    body.text-large .stakeholder-table td,
+    body.text-large .stakeholder-table th {
+      font-size: 1rem;
+    }
+
+    .toc-controls {
+      margin-bottom: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+    }
+
+    .toc-controls input {
+      width: 100%;
+      padding: .625rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: .875rem;
+      transition: all .2s ease;
+      background: var(--card);
+      color: var(--ink);
+    }
+
+    [data-theme="dark"] .toc-controls input {
+      border: 1px solid rgba(255,255,255,.1);
+    }
+
+    .toc-controls input:focus {
+      outline: none;
+      border-color: var(--brand-2);
+      box-shadow: 0 0 0 3px var(--ring);
+    }
+
+    .toc-controls button {
+      padding: .625rem;
+      border: 1px solid #e2e8f0;
+      background: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: .875rem;
+      font-weight: 500;
+      transition: all .2s ease;
+      color: var(--ink);
+    }
+
+    [data-theme="dark"] .toc-controls button {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,.1);
+    }
+
+    .toc-controls button:hover {
+      background: #f8fafc;
+      border-color: var(--brand-2);
+    }
+
+    .toc-link {
+      display: block;
+      padding: .625rem .75rem;
+      margin-bottom: .25rem;
+      border-radius: 8px;
+      color: var(--ink);
+      font-size: .875rem;
+      font-weight: 500;
+      transition: all .2s ease;
+    }
+
+    .toc-link:hover, .toc-link.active {
+      background: linear-gradient(135deg, #f0fdfa, #ecfeff);
+      color: var(--brand-1);
+      transform: translateX(4px);
+    }
+
+    [data-theme="dark"] .toc-link:hover,
+    [data-theme="dark"] .toc-link.active {
+      background: linear-gradient(135deg, rgba(94,234,212,.1), rgba(45,212,191,.1));
+    }
+
+    .main-content {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      border: 1px solid rgba(15,23,42,.08);
+      transition: background 0.3s ease, border 0.3s ease;
+    }
+
+    [data-theme="dark"] .main-content {
+      border: 1px solid rgba(255,255,255,.1);
+    }
+
+    .student-info {
+      background: linear-gradient(135deg, #ecfeff 0%, #f0fdfa 100%);
+      padding: 2rem;
+      border-bottom: 1px solid rgba(15,23,42,.08);
+      transition: background 0.3s ease;
+    }
+
+    [data-theme="dark"] .student-info {
+      background: linear-gradient(135deg, rgba(94,234,212,.1) 0%, rgba(45,212,191,.05) 100%);
+      border-bottom: 1px solid rgba(255,255,255,.1);
+    }
+
+    .student-info h3 {
+      font-size: 1.25rem;
+      color: var(--brand-1);
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .info-item {
+      background: white;
+      padding: 1rem;
+      border-radius: 8px;
+      border-left: 4px solid var(--brand-2);
+      box-shadow: var(--shadow-sm);
+      transition: background 0.3s ease;
+    }
+
+    [data-theme="dark"] .info-item {
+      background: var(--card);
+    }
+
+    .info-label {
+      font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--muted);
+      font-weight: 600;
+      margin-bottom: .5rem;
+    }
+
+    .info-value {
+      font-size: 1rem;
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    .section {
+      border-bottom: 1px solid rgba(15,23,42,.08);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+    }
+
+    .section-header {
+      list-style: none;
+      padding: 1.5rem 2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: white;
+      transition: all .2s ease;
+      user-select: none;
+    }
+
+    .section-header::-webkit-details-marker {
+      display: none;
+    }
+
+    .section-header:hover {
+      background: #f8fafc;
+    }
+
+    [data-theme="dark"] .section-header {
+      background: var(--card);
+    }
+
+    [data-theme="dark"] .section-header:hover {
+      background: rgba(255,255,255,.05);
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--brand-1);
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+
+    .chevron {
+      width: 24px;
+      height: 24px;
+      transition: transform .3s ease;
+      color: var(--brand-2);
+    }
+
+    details[open] .chevron {
+      transform: rotate(180deg);
+    }
+
+    .section-content {
+      padding: 2rem;
+      background: #fafbfc;
+      animation: slideDown .3s ease;
+    }
+
+    [data-theme="dark"] .section-content {
+      background: rgba(15,23,42,.5);
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .content-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(15,23,42,.08);
+      transition: background 0.3s ease, border 0.3s ease;
+    }
+
+    [data-theme="dark"] .content-card {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,.1);
+    }
+
+    .content-card h3, .content-card h4 {
+      color: var(--brand-1);
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .content-card h3 { font-size: 1.25rem; }
+    .content-card h4 { font-size: 1.1rem; }
+
+    .content-card p {
+      color: var(--ink);
+      margin-bottom: 1rem;
+      line-height: 1.7;
+    }
+
+    .content-card ul {
+      margin-left: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .content-card li {
+      margin-bottom: .5rem;
+      color: var(--ink);
+    }
+
+    .scope-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .scope-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      border-left: 4px solid;
+      transition: background 0.3s ease;
+    }
+
+    [data-theme="dark"] .scope-card {
+      background: var(--card);
+    }
+
+    .scope-card.in-scope { border-left-color: #22c55e; }
+    .scope-card.roadmap { border-left-color: #06b6d4; }
+    .scope-card.out-scope { border-left-color: #ef4444; }
+
+    .scope-card h4 {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .scope-card ul {
+      margin-left: 1.5rem;
+    }
+
+    .scope-card li {
+      margin-bottom: .5rem;
+      font-size: .9rem;
+    }
+
+    .stakeholder-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: background 0.3s ease;
+    }
+
+    [data-theme="dark"] .stakeholder-table {
+      background: var(--card);
+    }
+
+    .stakeholder-table th {
+      background: linear-gradient(135deg, #0f766e, #14b8a6);
+      color: white;
+      padding: 1rem;
+      text-align: left;
+      font-size: .875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    [data-theme="dark"] .stakeholder-table th {
+      background: linear-gradient(135deg, #134e4a, #0f766e);
+    }
+
+    .stakeholder-table td {
+      padding: 1rem;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: .9rem;
+      color: var(--ink);
+    }
+
+    .stakeholder-table tr:hover {
+      background: #f8fafc;
+    }
+
+    [data-theme="dark"] .stakeholder-table td {
+      border-bottom: 1px solid rgba(255,255,255,.1);
+    }
+
+    [data-theme="dark"] .stakeholder-table tr:hover {
+      background: rgba(255,255,255,.05);
+    }
+
+    .image-container {
+      background: white;
+      border-radius: var(--radius);
+      padding: 1rem;
+      box-shadow: var(--shadow-sm);
+      margin-top: 1rem;
+      transition: background 0.3s ease;
+    }
+
+    [data-theme="dark"] .image-container {
+      background: var(--card);
+    }
+
+    [data-theme="dark"] .image-container img {
+      opacity: 0.9;
+    }
+
+    .image-container img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform .2s ease;
+    }
+
+    .image-container img:hover {
+      transform: scale(1.02);
+    }
+
+    .back-to-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, var(--brand-1), var(--brand-2));
+      color: white;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: var(--shadow-lg);
+      opacity: 0;
+      visibility: hidden;
+      transition: all .3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .back-to-top.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .back-to-top:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(15,118,110,.3);
+    }
+
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: rgba(15,23,42,.1);
+      z-index: 1000;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--brand-1), var(--brand-2), var(--accent));
+      width: 0%;
+      transition: width .1s ease;
+    }
+
+    @media (max-width: 968px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+      }
+
+      .header h1 {
+        font-size: 1.75rem;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 1rem;
+      }
+
+      .section-header {
+        padding: 1rem;
+      }
+
+      .section-content {
+        padding: 1rem;
+      }
+
+      .scope-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .highlight {
+      background: #fef3c7;
+      padding: 0 4px;
+      border-radius: 4px;
+    }
+
+    [data-theme="dark"] .highlight {
+      background: rgba(252,211,77,.2);
+    }
+  </style>
+</head>
+<body>
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+
+  <header class="header">
+    <div class="header-badge">Managing IT Projects Course</div>
+    <h1>Professional Portfolio Website</h1>
+    <p>Project Charter - Fall 2025</p>
+  </header>
+
+  <div class="container">
+    <aside class="sidebar">
+      <h3>On this page</h3>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <svg class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/>
+          <line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/>
+          <line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        <span id="themeText">Dark Mode</span>
+      </button>
+      <div class="text-size-control">
+        <span class="text-size-label">Text Size</span>
+        <button class="text-size-btn" data-size="small" aria-label="Small text">A</button>
+        <button class="text-size-btn active" data-size="medium" aria-label="Medium text">A</button>
+        <button class="text-size-btn" data-size="large" aria-label="Large text">A</button>
+      </div>
+      <div class="toc-controls">
+        <input type="search" id="searchInput" placeholder="Search sections..." />
+        <button id="expandAll">Expand All</button>
+        <button id="collapseAll">Collapse All</button>
+      </div>
+      <nav id="tocNav"></nav>
+    </aside>
+
+    <main class="main-content">
+      <section class="student-info" id="student-information">
+        <h3>Student Information</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">Student Name</div>
+            <div class="info-value">David Dominguez</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Course</div>
+            <div class="info-value">Managing IT Projects</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Semester</div>
+            <div class="info-value">Fall 2025</div>
+          </div>
+        </div>
+      </section>
+
+      <details class="section" id="sec-1" open>
+        <summary class="section-header">
+          <h2 class="section-title">
+            <span>📋</span>
+            <span>1. Project Title & Description</span>
+          </h2>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 9l6 6 6-6"/>
+          </svg>
+        </summary>
+        <div class="section-content">
+          <div class="content-card">
+            <h3>Professional portfolio website</h3>
+            <p>My mission is to build technical expertise while maintaining professional standards and continuous learning in IT. My vision is to work as a network or systems administrator within 3-5 years. My goal is to use a professional portfolio website to apply to 15 IT positions and secure at least 3 interviews by December 2025. The portfolio will showcase my networking and system administration projects, making my technical skills visible to employers and supporting my job search efforts."</p>
+
+          </div>
+        </div>
+      </details>
+
+      <details class="section" id="sec-2">
+        <summary class="section-header">
+          <h2 class="section-title">
+            <span>🎯</span>
+            <span>2. Vision, Mission & Strategy Alignment</span>
+          </h2>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 9l6 6 6-6"/>
+          </svg>
+        </summary>
+        <div class="section-content">
+          <div class="content-card">
+            <h4>Personal Mission Connection:</h4>
+            <p>This project helps me showcase who I am professionally and where I'm headed, supporting my goals for career growth and personal branding. It highlights my values like integrity, by giving an honest picture of my skills and experiences; innovation, by using modern web tools to build a online presence; and continuous growth, by making it easy to update and refine my profile as my career evolves.</p>
+
+            <h4>Vision Alignment:</h4>
+            <p>Finishing this project brings me closer to my long-term vision by building a strong online presence that can spark new opportunities and connections. It gives me a space to share my skills, achievements, and career journey as they grow, supporting my goals for professional growth and personal development. With a professional profile website, I show that I'm proactive and future-focused, making it easier to attract employers, peers, and colleagues who connect with my vision and values.</p>
+
+            <h4>Strategic Goal Support:</h4>
+            <p>This project helps move my goals forward by strengthening my personal brand and making me more visible in my field, both essential for career growth and networking. It plays a key role in my bigger picture as the foundation of my digital presence, giving me a way to share my skills, experiences, and goals with a wider audience. By building a professional profile website, I'm taking an active step in shaping my career path and preparing myself for future opportunities.</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="section" id="sec-3">
+        <summary class="section-header">
+          <h2 class="section-title">
+            <span>💼</span>
+            <span>3. Business Case & Justification</span>
+          </h2>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 9l6 6 6-6"/>
+          </svg>
+        </summary>
+        <div class="section-content">
+          <div class="content-card">
+            <h4>Professional Value:</h4>
+            <p>In creating a professional profile website, I'll build valuable experience in web design, content creation, which are skills highly relevant in today's job market. My site will act as a living portfolio that showcases my professional growth, making it easier for employers or colleagues to see my expertise and achievements.</p>
+
+            <h4>Personal Value:</h4>
+            <p>This project holds strong personal value because it will help improve my problem solving skills, and bring a sense of accomplishment. Creating a professional profile website not only sharpens my abilities in web design but also adds value by letting me present my professional identity and achievements in a appealing way.</p>
+
+            <h4>Learning Outcomes:</h4>
+            <p>This project offers the opportunity to gain extensive knowledge and experience in areas such as technical skills like web design and project management.</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="section" id="sec-4">
+        <summary class="section-header">
+          <h2 class="section-title">
+            <span>🔍</span>
+            <span>4. High-Level Scope</span>
+          </h2>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 9l6 6 6-6"/>
+          </svg>
+        </summary>
+        <div class="section-content">
+          <div class="scope-grid">
+            <div class="scope-card in-scope">
+              <h4>✅ In Scope for Semester Project</h4>
+              <ul>
+                <li>A homepage with a personal introduction to viewers.</li>
+                <li>An about me section.</li>
+                <li>A portfolio/projects section that showcases projects from my education with short descriptions.</li>
+                <li>A downloadable PDF version of my resume</li>
+                <li>A contact form or link that will redirect users to send me an email/my LinkedIn page</li>
+                <li>A responsive visual layout (fonts will match, and the page will be eligible for users to understand).</li>
+              </ul>
+            </div>
+
+            <div class="scope-card roadmap">
+              <h4>🗺️ Roadmap Items (≤6 Months)</h4>
+              <ul>
+                <li>Optimize meta tags, alt text, and content to improve search engine visibility.</li>
+                <li>Set up goals to integrate detailed analytics tools.</li>
+                <li>Revamp the design for a modern look.</li>
+                <li>Enhance navigation features for a better user experience.</li>
+                <li>Add social media sharing buttons to remain relevant to visitors over time.</li>
+              </ul>
+            </div>
+
+            <div class="scope-card out-scope">
+              <h4>❌ Out of Scope</h4>
+              <ul>
+                <li>It should not function like an e-commerce website.</li>
+                <li>It should not function like a blog.</li>
+                <li>It should not have user registration or features for social interaction with others.</li>
+                <li>It should not be created for marketing materials or promoting content.</li>
+                <li>It should not have live streaming or video conference capabilities.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="section" id="sec-5">
+        <summary class="section-header">
+          <h2 class="section-title">
+            <span>👥</span>
+            <span>5. Stakeholder Register</span>
+          </h2>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 9l6 6 6-6"/>
+          </svg>
+        </summary>
+        <div class="section-content">
+          <table class="stakeholder-table">
+            <thead>
+              <tr>
+                <th>Stakeholder</th>
+                <th>Category</th>
+                <th>Role/Interest</th>
+                <th>Power</th>
+                <th>Interest</th>
+                <th>Engagement Strategy</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Myself</td>
+                <td>Internal</td>
+                <td>Responsible for the vision and execution, interested in showcasing my skills and achievements.</td>
+                <td>High</td>
+                <td>High</td>
+                <td>Regular updates to ensure the website aligns with my personal brand and goals.</td>
+              </tr>
+              <tr>
+                <td>Potential employers</td>
+                <td>External</td>
+                <td>Evaluate my skills and experience, interested in finding suitable candidates</td>
+                <td>Low</td>
+                <td>High</td>
+                <td>Clear and concise content that highlights my strengths and achievements, along with easy navigation and contact options.</td>
+              </tr>
+              <tr>
+                <td>Domain Registrar/ Hosting Provider</td>
+                <td>External</td>
+                <td>Provides domain registration and hosting services, interested in maintaining a reliable service.</td>
+                <td>High</td>
+                <td>Low</td>
+                <td>Regular communication to ensure uptime and resolve any technical issues promptly.</td>
+              </tr>
+              <tr>
+                <td>Professors</td>
+                <td>External</td>
+                <td>Provide academic guidance and feedback, interested in my educational development and success.</td>
+                <td>Low</td>
+                <td>High</td>
+                <td>Regular meetings and feedback sessions to ensure my project meets academic standards and supports my learning objectives. Professors can offer valuable insights and suggestions based on their expertise and experience.</td>
+              </tr>
+              <tr>
+                <td>Peers/Colleagues</td>
+                <td>External</td>
+                <td>Provide feedback and support, interested in my professional development and success.</td>
+                <td>Low</td>
+                <td>High</td>
+                <td>Engage them through feedback sessions and collaborative discussions to gather insights and suggestions for improving the website. They can offer valuable perspectives on how my profile is perceived and suggest enhancements based on their experiences.</td>
+              </tr>
+              <tr>
+                <td>Mentors/Advisors</td>
+                <td>External</td>
+                <td>Provide feedback and support, interested in my professional development and success.</td>
+                <td>Low</td>
+                <td>High</td>
+                <td>Seek advice and feedback to improve the website's content and design, ensuring it effectively represents my personal brand.</td>
+              </tr>
+              <tr>
+                <td>Industry professionals</td>
+                <td>External</td>
+                <td>Provide industry insights and networking opportunities, interested in supporting emerging professionals and maintaining industry standards.</td>
+                <td>Low</td>
+                <td>High</td>
+                <td>Engage with them through networking events, informational interviews, or mentorship programs to gain insights into industry trends and expectations. They can offer valuable feedback on how my profile aligns with industry standards and suggest improvements.</td>
+              </tr>
+              <tr>
+                <td>University administration</td>
+                <td>External</td>
+                <td>May provide resources or guidelines for the project, interested in ensuring compliance with academic standards and supporting student development.</td>
+                <td>High</td>
+                <td>Low</td>
+                <td>Communication to align with university policies and standards</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="image-container">
+            <h4>Power-Interest Grid Visualization</h4>
+            <a href="davidd.stakeholder register:matrix.png" target="_blank">
+              <img src="davidd.stakeholder register:matrix.png" alt="Power-Interest Grid">
+            </a>
+          </div>
+        </div>
+      </details>
+
+      <details class="section" id="sec-6">
+        <summary class="section-header">
+          <h2 class="section-title">
+            <span>📋</span>
+            <span>6. Deliverables</span>
+          </h2>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 9l6 6 6-6"/>
+          </svg>
+        </summary>
+        <div class="section-content">
+           <table class="stakeholder-table">
+            <thead>
+              <tr>
+                <th>Deliverable Name</th>
+                <th>Type</th>
+                <th>SMART Description</th>
+                <th>Definition of Done</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Interactive Portfolio Website</td>
+                <td>Tangible</td>
+                <td>Design and build a fully responsive portfolio website with at least 5 sections (Home, About, Portfolio, Resume, Contact) within 4 weeks.
+
+                The site will integrate personal branding and showcase at least 3 networking and system administration projects from previous college courses. 
+
+                The website will be specifically designed to support networking and job applications by presenting skills, projects, and credentials in a professional manner.</td>
+                <td>Website is fully functional and loads without errors.
+
+                Includes minimum 5 sections (Home, About, Portfolio, Resume, Contact).
+                Displays at least 3 detailed networking/system admin projects with descriptions and visuals.
+
+                Responsive design works across desktop, tablet, and mobile browsers.
+
+                Visual design matches personal branding package. Approved after usability and content review by professor/peers.
+                </td>
+              </tr>
+
+              <tr>
+                <td>Career Goals & Audience Definition</td>
+                <td>Intangible</td>
+                <td>Document career objectives entry level networking/system administration role, target audience.</td>
+                <td>Written document is complete.Reviewed by professor/mentor.Clearly defines career goals, audience profiles, and messaging.</td>
+              </tr>
+
+              <tr>
+                <td>Professional Story</td>
+                <td>Tangible</td>
+                <td>Develop a professional bio and highlight 3–5 detailed projects from previous networking and system administration projects from college courses.</td>
+                <td>Bio and detailed projects from previous college courses are proofread.Each project clearly explains role, tools, and outcomes.Approved by mentor/peer review.</td>
+              </tr>
+
+              <tr>
+                <td>Networking Toolkit</td>
+                <td>Tangible</td>
+                <td>Create supporting assets (downloadable PDF resume, LinkedIn profile integration, and QR code business card linking to the site) within 2 weeks.</td>
+                <td>Resume PDF finalized.LinkedIn integration tested.QR code functional and consistent with branding.</td>
+              </tr>
+
+              <tr>
+                <td>Launch & Feedback</td>
+                <td>Outcome</td>
+                <td>Launch the portfolio website on a professional domain and gather feedback from at least 3 stakeholders (employers, mentors, professors, peers) within 1 week of deployment.</td>
+
+                <td>Website is live on custom domain.Feedback collected from 3+ stakeholders.Improvement notes documented for future updates.</td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </details>
+
+      <details class="section" id="sec-7">
+        <summary class="section-header">
+          <h2 class="section-title">
+            <span>🗓️</span>
+            <span>7. Work Breakdown Structure and Task Duration Estimation</span>
+          </h2>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 9l6 6 6-6"/>
+          </svg>
+        </summary>
+        <div class="section-content">
+          <div class="image-container">
+            <p style="margin-bottom: 1rem; color: var(--muted); font-size: .9rem;">Click the image to download spreadsheet</p>
+            <a href="wbs-task-duration.xlsx" target="_blank">
+              <img src="wbs-task-duration.png" alt="Work breakdown and task duration estimations">
+            </a>
+          </div>
+        </div>
+      </details>
+
+      <details class="section" id="sec-8">
+        <summary class="section-header">
+          <h2 class="section-title">
+            <span>💸</span>
+            <span>8. Budget Estimation</span>
+          </h2>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 9l6 6 6-6"/>
+          </svg>
+        </summary>
+        <div class="section-content">
+          <div class="image-container">
+            <p style="margin-bottom: 1rem; color: var(--muted); font-size: .9rem;">Click the image to view full size</p>
+            <a href="budgetestimations.png" target="_blank">
+              <img src="budgetestimations.png" alt="Budget Estimations">
+            </a>
+          </div>
+        </div>
+      </details>
+
+      <details class="section" id="sec-9">
+        <summary class="section-header">
+          <h2 class="section-title">
+            <span>📊</span>
+            <span>9. Project Methodology</span>
+          </h2>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 9l6 6 6-6"/>
+          </svg>
+        </summary>
+        <div class="section-content">
+          <div class="content-card">
+            <p>I chose Hybrid—Iterative for my project.</p>
+            <br>
+            <p><strong>Reasons:</strong></p>
+            <ul>
+              <li>My requirements are clear enough to plan but flexible enough to improve.</li>
+              <li>I can turn in drafts (bio, work samples, mockups) early and revise them after feedback.</li>
+              <li>Stakeholders (professor, peers, mentors) are available to review and give suggestions during the project.</li>
+              <li>It keeps me on schedule while still letting me make changes, which is better than just locking myself into one plan.</li>
+            </ul>
+          </div>
+          <div class="image-container">
+            <img src="project-methodology-diagram.png" alt="Project methodology diagram">
+          </div>
+        </div>
+      </details>
+
+      <details class="section" id="sec-10">
+        <summary class="section-header">
+          <h2 class="section-title">
+            <span>⚙️</span>
+            <span>10. Project Tool Selection</span>
+          </h2>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 9l6 6 6-6"/>
+          </svg>
+        </summary>
+        <div class="section-content">
+          <div class="content-card">
+            <p>I chose to use Asana for my project tool</p>
+            <br>
+            <p><strong>Reasons:</strong></p>
+            <ul>
+              <li>Asana gives me more structure than Trello but isn't as overcomplicated as Monday.com</li>
+              <li>Since my project is Hybrid—Iterative, I need something that lets me plan phases, set deadlines, and still make adjustments when I get feedback.</li>
+              <li>Asana's timeline and dependency features make it easier for me to see what comes first, what depends on something else, and what can be worked on in parallel.</li>
+            </ul>
+          </div>
+          <div class="image-container">
+            <img src="asana-list-portfolioproject.png" alt="List view of portfolio project in Asana">
+          </div>
+        </div>
+      </details>
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
+
+  <script>
+    // Text Size Control
+    const textSizeButtons = document.querySelectorAll('.text-size-btn');
+    const body = document.body;
+    
+    const savedTextSize = localStorage.getItem('textSize') || 'medium';
+    body.classList.add(`text-${savedTextSize}`);
+    textSizeButtons.forEach(btn => {
+      if (btn.dataset.size === savedTextSize) {
+        btn.classList.add('active');
+      }
+    });
+    
+    textSizeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const size = btn.dataset.size;
+        body.classList.remove('text-small', 'text-medium', 'text-large');
+        body.classList.add(`text-${size}`);
+        textSizeButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        localStorage.setItem('textSize', size);
+      });
+    });
+
+    // Dark Mode Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    const themeText = document.getElementById('themeText');
+    const htmlElement = document.documentElement;
+    
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    htmlElement.setAttribute('data-theme', currentTheme);
+    updateThemeButton(currentTheme);
+    
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = htmlElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      htmlElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateThemeButton(newTheme);
+    });
+    
+    function updateThemeButton(theme) {
+      const icon = themeToggle.querySelector('.theme-icon');
+      if (theme === 'dark') {
+        themeText.textContent = 'Light Mode';
+        icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+      } else {
+        themeText.textContent = 'Dark Mode';
+        icon.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+      }
+    }
+
+    // Generate Table of Contents
+    const tocNav = document.getElementById('tocNav');
+    const sections = document.querySelectorAll('.section');
+    
+    sections.forEach((section) => {
+      const title = section.querySelector('.section-title');
+      const link = document.createElement('a');
+      link.href = `#${section.id}`;
+      link.className = 'toc-link';
+      link.textContent = title.textContent.trim();
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (!section.open) section.open = true;
+      });
+      tocNav.appendChild(link);
+    });
+
+    // Highlight active section in TOC
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const links = tocNav.querySelectorAll('.toc-link');
+          links.forEach(link => {
+            link.classList.toggle('active', 
+              link.getAttribute('href') === `#${entry.target.id}`);
+          });
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+
+    sections.forEach(section => observer.observe(section));
+
+    // Expand/Collapse All
+    document.getElementById('expandAll').addEventListener('click', () => {
+      sections.forEach(section => section.open = true);
+    });
+
+    document.getElementById('collapseAll').addEventListener('click', () => {
+      sections.forEach(section => section.open = false);
+    });
+
+    // Search functionality
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase();
+      const tocLinks = tocNav.querySelectorAll('.toc-link');
+      
+      sections.forEach((section, index) => {
+        const text = section.textContent.toLowerCase();
+        const matches = text.includes(query);
+        section.style.display = query && !matches ? 'none' : '';
+        tocLinks[index].style.display = query && !matches ? 'none' : '';
+        
+        if (query && matches) {
+          section.querySelector('.section-content').classList.add('highlight');
+        } else {
+          section.querySelector('.section-content').classList.remove('highlight');
+        }
+      });
+    });
+
+    // Progress bar
+    const progressFill = document.getElementById('progressFill');
+    const updateProgress = () => {
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollPercent = (scrollTop / (documentHeight - windowHeight)) * 100;
+      progressFill.style.width = scrollPercent + '%';
+    };
+
+    window.addEventListener('scroll', updateProgress);
+    window.addEventListener('resize', updateProgress);
+
+    // Back to top button
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 500) {
+        backToTop.classList.add('show');
+      } else {
+        backToTop.classList.remove('show');
+      }
+    });
+
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+</body>
